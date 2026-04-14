@@ -1,9 +1,7 @@
 streamlit
-pandas
-plotly
-reportlab
-pillow
-PIL
 math
 typing
+pandas
+plotly
 textwrap
+PIL
