@@ -4,3 +4,6 @@ plotly
 reportlab
 pillow
 PIL
+math
+typing
+textwrap
