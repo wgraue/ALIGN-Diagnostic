@@ -201,6 +201,39 @@ def make_download_dataframe(responses: Dict[str, int], category_scores: Dict[str
     rows.append({"Item": "Respondent", "Response": respondent})
     return pd.DataFrame(rows)
 
+def get_gsheet_worksheet():
+    scope = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive",
+    ]
+    creds = Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=scope,
+    )
+    client = gspread.authorize(creds)
+    return client.open(st.secrets["sheets"]["spreadsheet_name"]).worksheet(
+        st.secrets["sheets"]["worksheet_name"]
+    )
+
+
+def log_summary_to_gsheet(org_name, respondent, category_scores):
+    worksheet = get_gsheet_worksheet()
+    overall_score = sum(category_scores.values()) / len(category_scores)
+
+    worksheet.append_row([
+        datetime.now().isoformat(timespec="seconds"),
+        org_name,
+        respondent,
+        round(category_scores["Assess"], 2),
+        round(category_scores["Link"], 2),
+        round(category_scores["Implement"], 2),
+        round(category_scores["Guide"], 2),
+        round(category_scores["Normalize"], 2),
+        round(overall_score, 2),
+        maturity_level(overall_score),
+    ])
+
+
 # -----------------------------
 # Sidebar
 # -----------------------------
@@ -360,6 +393,13 @@ if st.button("Generate Results", type="primary"):
 
     overall_score = sum(category_scores.values()) / len(category_scores)
     overall_level = maturity_level(overall_score)
+
+    try:
+        log_summary_to_gsheet(org_name, respondent, category_scores)
+        st.success("Results logged to Google Sheets.")
+    except Exception as e:
+        st.warning(f"Results were generated, but logging failed: {e}")
+    
     strengths, gaps = top_strengths_and_gaps(category_scores)
     results_df = build_results_dataframe(category_scores)
     insights = overall_interpretation(category_scores)
