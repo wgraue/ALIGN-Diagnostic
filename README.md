@@ -1,19 +1,19 @@
 # 🎈 Blank app template
 
-A simple Streamlit app template for you to modify!
+What this version includes:
+ - all 25 ALIGN diagnostic questions
+ - automatic category and overall scoring
+ - maturity level classification
+ - status flags for each dimension
+ - radar chart visualization
+ - interpretation logic
+ - downloadable CSV report
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
-
-### How to run it on your own machine
-
-1. Install the requirements
-
-   ```
-   $ pip install -r requirements.txt
-   ```
-
-2. Run the app
-
-   ```
-   $ streamlit run streamlit_app.py
-   ```
+ Changes for v1.1:
+ - generates a polished executive summary after scoring
+ - highlights overall maturity level, top strengths, and main gaps
+ - organizes recommendations into:
+    - short-term priorities
+    - mid-term priorities
+    - longer-term opportunities
+ - adds a second download option for the summary as a Markdown file
